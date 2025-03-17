@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Services App</title>
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" defer></script>
+    <!-- Three.js for 3D visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FullCalendar for scheduling -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome-screen">
+            <div class="center-content">
+                <h1 class="app-title">Home Services</h1>
+                <p class="app-description">Get instant quotes for home services with our 3D scanning technology</p>
+                <img src="assets/logo.svg" alt="Home Services Logo" class="app-logo">
+                <button class="button" id="get-started-btn">Get Started</button>
+            </div>
+        </div>
+        
+        <!-- Address Input Screen -->
+        <div class="screen" id="address-screen">
+            <div class="header">
+                <button class="back-button" data-target="welcome-screen">←</button>
+                <div class="title">Enter Your Address</div>
+            </div>
+            <div class="content">
+                <p class="instruction-text">We'll check if your home is already mapped in 3D</p>
+                <input type="text" class="input-field" id="street-address" placeholder="Street Address">
+                <input type="text" class="input-field" id="city-state-zip" placeholder="City, State, ZIP">
+                <div id="map-container" class="map-container">
+                    <div id="map"></div>
+                </div>
+                <p class="option-text">Or use current location</p>
+                <button class="button" id="use-location-btn">Use My Location</button>
+                <button class="button" id="continue-address-btn">Continue</button>
+            </div>
+        </div>
+        
+        <!-- 3D Model Check Screen -->
+        <div class="screen" id="model-check-screen">
+            <div class="header">
+                <button class="back-button" data-target="address-screen">←</button>
+                <div class="title">Checking 3D Model</div>
+            </div>
+            <div class="content">
+                <div class="processing-animation">
+                    <div class="spinner"></div>
+                    <p id="checking-status">Checking available 3D data sources...</p>
+                </div>
+                <div class="spacer"></div>
+                <div class="info-box">
+                    <p>We're checking if your home is already mapped in 3D using:</p>
+                    <ul class="check-sources">
+                        <li>• Google Photorealistic 3D Tiles</li>
+                        <li>• LiDAR + Satellite Data</li>
+                        <li>• Public property records</li>
+                    </ul>
+                </div>
+                <div id="model-check-result" class="hidden">
+                    <button class="button" id="model-found-btn">Continue with 3D Model</button>
+                    <button class="button secondary" id="no-model-btn">Take Photos Instead</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instant Model Screen -->
+        <div class="screen" id="instant-model-screen">
+            <div class="header">
+                <button class="back-button" data-target="model-check-screen">←</button>
+                <div class="title">3D Model Found</div>
+            </div>
+            <div class="content">
+                <p class="success-text">Great news! We found an existing 3D model of your home.</p>
+                <div id="3d-model-container" class="model-container">
+                    <!-- 3D model will be rendered here -->
+                </div>
+                <p class="info-text">Our system has automatically generated a service quote based on your home's dimensions.</p>
+                <button class="button" id="view-quote-btn">View Quote</button>
+            </div>
+        </div>
+        
+        <!-- Photo Upload Screen -->
+        <div class="screen" id="photo-upload-screen">
+            <div class="header">
+                <button class="back-button" data-target="model-check-screen">←</button>
+                <div class="title">Take Photos</div>
+            </div>
+            <div class="content">
+                <p class="instruction-text">We need photos of your home from different angles to create a 3D model.</p>
+                <div class="photo-upload-area" id="photo-upload-area">
+                    <i class="camera-icon">📷</i>
+                    <p>Tap to take a photo</p>
+                    <input type="file" id="photo-input" accept="image/*" capture="environment" multiple hidden>
+                </div>
+                <p class="photo-count">Photos taken (<span id="photos-count">0</span>/6):</p>
+                <div class="photo-grid" id="photo-grid">
+                    <!-- Photos will be displayed here -->
+                </div>
+                <p class="photo-tip">Please take photos of all sides of your home for the best results.</p>
+                <button class="button" id="submit-photos-btn" disabled>Submit Photos</button>
+            </div>
+        </div>
+        
+        <!-- Processing Screen -->
+        <div class="screen" id="processing-screen">
+            <div class="header">
+                <button class="back-button" data-target="photo-upload-screen">←</button>
+                <div class="title">Creating 3D Model</div>
+            </div>
+            <div class="content">
+                <div class="processing-animation">
+                    <div class="spinner"></div>
+                    <p id="processing-status">Processing your photos...</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="processing-progress"></div>
+                    </div>
+                </div>
+                <div class="spacer"></div>
+                <div class="info-box">
+                    <p>Our AI is building a 3D model of your home using photogrammetry.</p>
+                    <p class="estimate-text">This usually takes 2-3 minutes.</p>
+                </div>
+                <button class="button" id="processing-complete-btn">Continue to Quote</button>
+            </div>
+        </div>
+        
+        <!-- Bid Screen -->
+        <div class="screen" id="bid-screen">
+            <div class="header">
+                <button class="back-button" data-target="instant-model-screen">←</button>
+                <div class="title">Your Quote</div>
+            </div>
+            <div class="content">
+                <div id="model-with-measurements" class="model-container">
+                    <!-- 3D model with measurements will be displayed here -->
+                </div>
+                <div class="bid-details">
+                    <h3>Service Details</h3>
+                    <div class="bid-item">
+                        <span>Window Cleaning (<span id="window-count">12</span> windows)</span>
+                        <span id="window-price">$120.00</span>
+                    </div>
+                    <div class="bid-item">
+                        <span>Gutter Cleaning (<span id="gutter-length">80</span> ft)</span>
+                        <span id="gutter-price">$160.00</span>
+                    </div>
+                    <div class="bid-item">
+                        <span>Roof Inspection</span>
+                        <span id="roof-price">$75.00</span>
+                    </div>
+                    <div class="total-price">
+                        <span>Total</span>
+                        <span id="total-price">$355.00</span>
+                    </div>
+                </div>
+                <p class="price-info">Price based on your home's dimensions and features.</p>
+                <button class="button" id="schedule-btn">Schedule Service</button>
+            </div>
+        </div>
+        
+        <!-- Schedule Screen -->
+        <div class="screen" id="schedule-screen">
+            <div class="header">
+                <button class="back-button" data-target="bid-screen">←</button>
+                <div class="title">Schedule Service</div>
+            </div>
+            <div class="content">
+                <p class="instruction-text">Select a date and time for your service:</p>
+                <div id="calendar" class="calendar"></div>
+                <p class="time-slots-title">Available time slots:</p>
+                <div class="time-slots" id="time-slots">
+                    <!-- Time slots will be generated dynamically -->
+                </div>
+                <div class="selected-date-time">
+                    <p>Selected: <span id="selected-date">None</span> at <span id="selected-time">None</span></p>
+                </div>
+                <button class="button" id="continue-to-payment-btn" disabled>Continue to Payment</button>
+            </div>
+        </div>
+        
+        <!-- Payment Screen -->
+        <div class="screen" id="payment-screen">
+            <div class="header">
+                <button class="back-button" data-target="schedule-screen">←</button>
+                <div class="title">Payment</div>
+            </div>
+            <div class="content">
+                <p class="instruction-text">Select a payment method:</p>
+                <div class="payment-methods" id="payment-methods">
+                    <div class="payment-method selected" data-method="credit-card">
+                        <div class="payment-icon">💳</div>
+                        <div>
+                            <p class="payment-name">Credit Card</p>
+                            <p class="payment-detail">Visa ending in 4242</p>
+                        </div>
+                    </div>
+                    <div class="payment-method" data-method="apple-pay">
+                        <div class="payment-icon">🍎</div>
+                        <div>
+                            <p class="payment-name">Apple Pay</p>
+                        </div>
+                    </div>
+                    <div class="payment-method" data-method="google-pay">
+                        <div class="payment-icon">G</div>
+                        <div>
+                            <p class="payment-name">Google Pay</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacer"></div>
+                <div class="bid-details summary">
+                    <div class="total-price">
+                        <span>Total</span>
+                        <span id="payment-total">$355.00</span>
+                    </div>
+                </div>
+                <button class="button" id="pay-now-btn">Pay Now</button>
+            </div>
+        </div>
+        
+        <!-- Confirmation Screen -->
+        <div class="screen" id="confirmation-screen">
+            <div class="content">
+                <div class="center-content">
+                    <div class="success-icon">✓</div>
+                    <h2 class="confirmation-title">Booking Confirmed!</h2>
+                    <p class="confirmation-text">Your service is scheduled for:</p>
+                    <p class="confirmation-date" id="confirmed-date">Tuesday, March 24</p>
+                    <p class="confirmation-time" id="confirmed-time">11:00 AM - 1:00 PM</p>
+                    <p class="confirmation-note">We'll send you a reminder 24 hours before your appointment.</p>
+                    <button class="button" id="done-btn">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
