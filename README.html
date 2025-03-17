@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README - Home Services App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #4285F4;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            color: #555;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #e8f4fd;
+            border-left: 4px solid #4285F4;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Home Services App - Working Prototype</h1>
+    
+    <p>This is a working prototype for the Home Services App that demonstrates the user flow from entering an address to scheduling and paying for home services, with a focus on the 3D modeling technology that enables instant quotes.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> This is a prototype built with free tools and APIs. For a production version, you would need to replace the placeholder API keys with real ones and implement actual backend functionality.
+    </div>
+    
+    <h2>Features</h2>
+    
+    <ul>
+        <li><strong>Address Validation</strong> - Uses Google Maps API for address validation and geolocation</li>
+        <li><strong>3D Model Visualization</strong> - Simulates 3D model creation and visualization using Three.js</li>
+        <li><strong>Photo Upload</strong> - Allows users to upload photos of their home for 3D model creation</li>
+        <li><strong>Interactive Scheduling</strong> - Calendar widget for selecting service dates and times</li>
+        <li><strong>Payment Processing</strong> - Simulated payment method selection and processing</li>
+    </ul>
+    
+    <h2>How to Use</h2>
+    
+    <ol>
+        <li>Open <code>index.html</code> in a web browser</li>
+        <li>Click "Get Started" to begin the process</li>
+        <li>Enter your address or use geolocation</li>
+        <li>The app will check if a 3D model of your home exists</li>
+        <li>If a model exists, you'll see a 3D visualization and a quote</li>
+        <li>If no model exists, you can upload photos of your home</li>
+        <li>After processing, you'll receive a quote based on your home's dimensions</li>
+        <li>Select a date and time for the service</li>
+        <li>Choose a payment method and complete the booking</li>
+    </ol>
+    
+    <h2>Technical Implementation</h2>
+    
+    <p>This prototype is built using:</p>
+    
+    <ul>
+        <li><strong>HTML/CSS/JavaScript</strong> - For the frontend interface</li>
+        <li><strong>Google Maps API</strong> - For address validation and geolocation</li>
+        <li><strong>Three.js</strong> - For 3D model visualization</li>
+        <li><strong>FullCalendar</strong> - For the scheduling calendar</li>
+        <li><strong>LocalStorage</strong> - For storing user data between sessions</li>
+    </ul>
+    
+    <h2>Setup for Development</h2>
+    
+    <p>To set up this project for development:</p>
+    
+    <pre><code>git clone https://github.com/YOUR_USERNAME/StandardHomeServicesApp.git
+cd StandardHomeServicesApp
+# Open index.html in your browser</code></pre>
+    
+    <h2>Google Maps API Setup</h2>
+    
+    <p>To use the Google Maps functionality:</p>
+    
+    <ol>
+        <li>Get a Google Maps API key from the <a href="https://console.cloud.google.com/">Google Cloud Console</a></li>
+        <li>Enable the Maps JavaScript API and Places API</li>
+        <li>Replace <code>YOUR_API_KEY</code> in the index.html file with your actual API key</li>
+    </ol>
+    
+    <div class="note">
+        <strong>Important:</strong> For security reasons, you should restrict your API key to your domain when using it in production.
+    </div>
+    
+    <h2>Deployment</h2>
+    
+    <p>This project is set up to be deployed on GitHub Pages:</p>
+    
+    <ol>
+        <li>Push the code to your GitHub repository</li>
+        <li>Go to the repository settings</li>
+        <li>Scroll down to the GitHub Pages section</li>
+        <li>Select the main branch as the source</li>
+        <li>Click Save</li>
+    </ol>
+    
+    <p>Your site will be published at <code>https://YOUR_USERNAME.github.io/StandardHomeServicesApp/</code></p>
+    
+    <h2>Next Steps for Development</h2>
+    
+    <p>To turn this prototype into a production-ready application:</p>
+    
+    <ul>
+        <li>Implement a backend server for data storage and processing</li>
+        <li>Integrate with a real 3D modeling service or API</li>
+        <li>Add user authentication and account management</li>
+        <li>Implement actual payment processing with Stripe or similar</li>
+        <li>Add service provider management and scheduling</li>
+        <li>Implement notifications and reminders</li>
+    </ul>
+</body>
+</html>
