@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Standard Home">
+    <title>Standard Home Services</title>
+    <link rel="apple-touch-icon" href="images/logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            overflow-x: hidden;
+        }
+        
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            transition: transform 0.3s ease-in-out;
+            background-color: #ffffff;
+            transform: translateX(100%);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .screen.active {
+            transform: translateX(0);
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .welcome-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        p {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .button {
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+        }
+        
+        .button.green {
+            background-color: #4CAF50;
+        }
+        
+        .button:active {
+            opacity: 0.8;
+        }
+        
+        .secondary-button {
+            background-color: transparent;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .form-group input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .phone-input {
+            display: flex;
+            align-items: center;
+        }
+        
+        .country-code {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px 0 0 10px;
+            margin-right: -1px;
+            background-color: #f5f5f5;
+        }
+        
+        .country-code img {
+            width: 20px;
+            height: 15px;
+            margin-right: 5px;
+        }
+        
+        .phone-input input {
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .social-login {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            background-color: #000000;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .social-button img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        
+        .terms {
+            font-size: 12px;
+            color: #999999;
+            max-width: 300px;
+            margin-top: 20px;
+        }
+        
+        .address-search {
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .address-search input {
+            width: 100%;
+            padding: 12px 15px;
+            padding-left: 40px;
+            border: 1px solid #cccccc;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .address-search .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+        
+        .next-button {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: #000000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .house-visualization {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .house-visualization img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .service-list {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item {
+            background-color: #f5f5f5;
+            border-radius: 25px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .service-item.selected {
+            background-color: #e0f2e1;
+            border: 1px solid #4CAF50;
+        }
+        
+        .service-name {
+            font-weight: 500;
+        }
+        
+        .service-price {
+            font-weight: 600;
+        }
+        
+        .total-container {
+            width: 100%;
+            max-width: 300px;
+            background-color: #f5f5f5;
+            border-radius: 25px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .total-label {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .total-price {
+            font-weight: 700;
+        }
+        
+        .calendar-container {
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 5px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .calendar-day:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .calendar-day.selected {
+            background-color: #000000;
+            color: white;
+        }
+        
+        .calendar-day.disabled {
+            color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .time-slots {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .time-slot {
+            background-color: #f5f5f5;
+            border-radius: 25px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .time-slot.selected {
+            background-color: #000000;
+            color: white;
+        }
+        
+        .appointment-details {
+            width: 100%;
+            max-width: 300px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .appointment-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+        }
+        
+        .appointment-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .appointment-date {
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .appointment-time {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .appointment-address {
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .payment-methods {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .payment-method.selected {
+            border-color: #000000;
+            background-color: #f5f5f5;
+        }
+        
+        .payment-method-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .payment-method-name {
+            font-weight: 500;
+        }
+        
+        .card-details {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .card-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .card-field {
+            flex: 1;
+        }
+        
+        .card-field label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .card-field input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .completion-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .checkmark {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .checkmark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .completion-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="welcome-content">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+            <h1>Standard Home Services</h1>
+        </div>
+    </div>
+    
+    <!-- Phone Number Registration Screen -->
+    <div id="phone-screen" class="screen">
+        <div class="content">
+            <h1>Get Started</h1>
+            
+            <div class="form-group">
+                <div class="phone-input">
+                    <div class="country-code">
+                        <span>+1</span>
+                    </div>
+                    <input type="tel" placeholder="(555) 555-0123" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="14">
+                </div>
+            </div>
+            
+            <button class="button" onclick="showScreen('address-screen')">Continue</button>
+            
+            <div class="social-login">
+                <button class="social-button" style="background-color: #000000;">
+                    <span>Continue with Apple</span>
+                </button>
+                <button class="social-button" style="background-color: #4285F4;">
+                    <span>Continue with Google</span>
+                </button>
+                <button class="social-button" style="background-color: #333333;">
+                    <span>Continue with Email</span>
+                </button>
+            </div>
+            
+            <button class="secondary-button">Find my account</button>
+            
+            <div class="terms">
+                By proceeding, you consent to get calls, WhatsApp or SMS messages, including by automated means, from Standard Home Services and its affiliates to the number provided.
+            </div>
+        </div>
+    </div>
+    
+    <!-- Address Input Screen -->
+    <div id="address-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <div class="address-search">
+                <div class="search-icon">🔍</div>
+                <input type="text" placeholder="YOUR ADDRESS">
+                <div class="next-button" onclick="showScreen('house-screen')">→</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 3D House Visualization Screen -->
+    <div id="house-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <div class="house-visualization">
+                <img src="images/house_3d.jpg" alt="3D House Visualization">
+            </div>
+            
+            <button class="button" onclick="showScreen('services-screen')">Looks Good!</button>
+        </div>
+    </div>
+    
+    <!-- Service Selection Screen -->
+    <div id="services-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <div class="service-list">
+                <div class="service-item" onclick="toggleService(this, 350)" data-price="350">
+                    <div class="service-name">Window Cleaning (In and Out)</div>
+                    <div class="service-price">$350</div>
+                </div>
+                <div class="service-item" onclick="toggleService(this, 225)" data-price="225">
+                    <div class="service-name">Window Cleaning (Outside Only)</div>
+                    <div class="service-price">$225</div>
+                </div>
+                <div class="service-item" onclick="toggleService(this, 350)" data-price="350">
+                    <div class="service-name">Gutter Cleaning</div>
+                    <div class="service-price">$350</div>
+                </div>
+                <div class="service-item" onclick="toggleService(this, 450)" data-price="450">
+                    <div class="service-name">Soft Washing</div>
+                    <div class="service-price">$450</div>
+                </div>
+                <div class="service-item" onclick="toggleService(this, 350)" data-price="350">
+                    <div class="service-name">Roof Cleaning</div>
+                    <div class="service-price">$350</div>
+                </div>
+                <div class="service-item" onclick="toggleService(this, 250)" data-price="250">
+                    <div class="service-name">Walk/Driveway</div>
+                    <div class="service-price">$250</div>
+                </div>
+            </div>
+            
+            <div class="total-container">
+                <div class="total-label">Total</div>
+                <div class="total-price" id="total-price">$0</div>
+            </div>
+            
+            <button class="button" onclick="showScreen('calendar-screen')">Continue</button>
+        </div>
+    </div>
+    
+    <!-- Calendar Month Selection Screen -->
+    <div id="calendar-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <h1>2025</h1>
+            
+            <div class="calendar-container">
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">S</div>
+                    <div class="calendar-day-header">M</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">W</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">F</div>
+                    <div class="calendar-day-header">S</div>
+                    
+                    <!-- January -->
+                    <div class="calendar-day disabled">29</div>
+                    <div class="calendar-day disabled">30</div>
+                    <div class="calendar-day disabled">31</div>
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day">4</div>
+                    
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                    
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                    
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                    
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                    <div class="calendar-day disabled">1</div>
+                </div>
+            </div>
+            
+            <button class="button" onclick="showScreen('day-screen')">Select January</button>
+        </div>
+    </div>
+    
+    <!-- Day Selection Screen -->
+    <div id="day-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <h1>March</h1>
+            
+            <div class="calendar-container">
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">S</div>
+                    <div class="calendar-day-header">M</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">W</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">F</div>
+                    <div class="calendar-day-header">S</div>
+                    
+                    <div class="calendar-day disabled">23</div>
+                    <div class="calendar-day disabled">24</div>
+                    <div class="calendar-day disabled">25</div>
+                    <div class="calendar-day disabled">26</div>
+                    <div class="calendar-day disabled">27</div>
+                    <div class="calendar-day disabled">28</div>
+                    <div class="calendar-day">1</div>
+                    
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day selected" onclick="selectDay(this)">4</div>
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                    <div class="calendar-day disabled">1</div>
+                    <div class="calendar-day disabled">2</div>
+                    <div class="calendar-day disabled">3</div>
+                    <div class="calendar-day disabled">4</div>
+                    <div class="calendar-day disabled">5</div>
+                </div>
+            </div>
+            
+            <button class="button" onclick="showScreen('time-screen')">Select March 4</button>
+        </div>
+    </div>
+    
+    <!-- Time Slot Selection Screen -->
+    <div id="time-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <div class="time-slots">
+                <div class="time-slot" onclick="selectTimeSlot(this)">8:00 AM</div>
+                <div class="time-slot selected" onclick="selectTimeSlot(this)">9:00 AM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">10:00 AM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">1:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">2:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">3:00 PM</div>
+            </div>
+            
+            <button class="button" onclick="showScreen('confirmation-screen')">Select 9:00 AM</button>
+        </div>
+    </div>
+    
+    <!-- Appointment Confirmation Screen -->
+    <div id="confirmation-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <div class="appointment-details">
+                <div class="appointment-icon">
+                    <img src="images/calendar_icon.png" alt="Calendar Icon">
+                </div>
+                <div class="appointment-date">March 4, 2025</div>
+                <div class="appointment-time">9:00 AM</div>
+                <div class="appointment-address">123 ABC ST, NEW YORK, NEW YORK</div>
+            </div>
+            
+            <button class="button" onclick="showScreen('payment-screen')">Confirm!</button>
+        </div>
+    </div>
+    
+    <!-- Payment Screen -->
+    <div id="payment-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Add Payment</h1>
+            
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPaymentMethod(this)">
+                    <div class="payment-method-name">Apple Pay</div>
+                </div>
+                <div class="payment-method selected" onclick="selectPaymentMethod(this)">
+                    <div class="payment-method-name">Credit/Debit Card</div>
+                </div>
+                <div class="payment-method" onclick="selectPaymentMethod(this)">
+                    <div class="payment-method-name">PayPal</div>
+                </div>
+                <div class="payment-method" onclick="selectPaymentMethod(this)">
+                    <div class="payment-method-name">Mobile Phone</div>
+                </div>
+            </div>
+            
+            <div class="card-details">
+                <div class="form-group">
+                    <label for="card-number">Number</label>
+                    <input type="text" id="card-number" placeholder="4242 4242 4242 4242">
+                </div>
+                
+                <div class="card-row">
+                    <div class="card-field">
+                        <label for="expiry">Expires</label>
+                        <input type="text" id="expiry" placeholder="MM / YYYY">
+                    </div>
+                    <div class="card-field">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="Security code">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="button" onclick="showScreen('complete-screen')">Confirm Order!</button>
+        </div>
+    </div>
+    
+    <!-- Order Complete Screen -->
+    <div id="complete-screen" class="screen">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Standard Home Services Logo">
+            </div>
+        </div>
+        <div class="completion-container">
+            <div class="checkmark">
+                <img src="images/checkmark.png" alt="Checkmark">
+            </div>
+            <div class="completion-title">Order Complete!</div>
+        </div>
+    </div>
+
+    <script>
+        // Show splash screen for 2 seconds, then show phone screen
+        setTimeout(() => {
+            showScreen('phone-screen');
+        }, 2000);
+        
+        // Show a specific screen and hide others
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        // Toggle service selection and update total
+        let total = 0;
+        function toggleService(element, price) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                total -= price;
+            } else {
+                element.classList.add('selected');
+                total += price;
+            }
+            
+            document.getElementById('total-price').textContent = `$${total}`;
+        }
+        
+        // Select day
+        function selectDay(element) {
+            const days = document.querySelectorAll('.calendar-day');
+            days.forEach(day => {
+                day.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+        }
+        
+        // Select time slot
+        function selectTimeSlot(element) {
+            const timeSlots = document.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+        }
+        
+        // Select payment method
+        function selectPaymentMethod(element) {
+            const methods = document.querySelectorAll('.payment-method');
+            methods.forEach(method => {
+                method.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+        }
+    </script>
+</body>
+</html>
